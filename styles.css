@@ -528,8 +528,9 @@ tbody td:first-child {
 /* Print card — preview matches label proportions (4in × 2in ≈ 2:1 ratio) */
 .print-card {
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     padding: 0.75rem 1rem;
@@ -538,6 +539,13 @@ tbody td:first-child {
     transition: all var(--transition);
     page-break-inside: avoid;
     break-inside: avoid;
+}
+
+.print-card-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
 }
 
 .print-card:hover {
@@ -555,6 +563,25 @@ tbody td:first-child {
     padding: 4px;
     width: 100px;
     height: 100px;
+}
+
+.print-card-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.print-card-nama3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: left;
+    /* Changed to left */
+    width: 100%;
+    white-space: normal;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .print-card-code img,
@@ -592,9 +619,10 @@ tbody td:first-child {
     font-weight: 700;
     color: var(--text-primary);
     line-height: 1.6;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
+    text-align: left;
+    /* Ensure left align */
 }
 
 .print-card-kode {
@@ -606,7 +634,7 @@ tbody td:first-child {
    Label: 4in × 2in (101.6mm × 50.8mm)
    ============================ */
 @page {
-    size: 101.6mm 50.8mm;
+    size: 60mm 40mm;
     margin: 0;
 }
 
@@ -619,8 +647,8 @@ tbody td:first-child {
 
     html,
     body {
-        width: 101.6mm;
-        height: 50.8mm;
+        width: 60mm;
+        height: 40mm;
         margin: 0;
         padding: 0;
         background: #fff !important;
@@ -664,29 +692,41 @@ tbody td:first-child {
     }
 
     .print-area {
-        width: 101.6mm;
+        width: 60mm;
         margin: 0;
         padding: 0;
     }
 
     /* ---- Each card = 1 label, NO extra space ---- */
     .print-card {
-        width: 101.6mm;
-        height: 50.8mm;
+        width: 60mm;
+        height: 40mm;
         margin: 0;
-        padding: 4mm 3mm 2mm 6mm;
+        padding: 0mm 4mm 0mm 4mm;
+        /* No top/bottom padding, 4mm sides */
         display: flex;
-        align-items: center;
-        gap: 4mm;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        /* Push all content to the bottom to leave blank space at top */
         background: transparent !important;
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
-        transform: none !important;
         overflow: hidden;
-        max-height: none;
         page-break-after: always;
         break-after: page;
+        box-sizing: border-box;
+    }
+
+    .print-card-top {
+        display: flex;
+        align-items: flex-start;
+        /* Align top of QR and Text */
+        gap: 1mm;
+        width: 100%;
+        margin-bottom: 0mm;
+        /* space before nama 3 */
     }
 
     .print-card:last-child {
@@ -694,15 +734,41 @@ tbody td:first-child {
         break-after: auto;
     }
 
-    /* ---- QR / Barcode — fills label height ---- */
-    .print-card-code {
-        width: 44mm;
-        height: 44mm;
-        min-height: auto;
-        flex-shrink: 0;
+    /* ---- Left Column (QR Only Now) ---- */
+    .print-card-left {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        align-items: flex-start;
+        /* Align left */
+        width: 20mm;
+        /* Reduce wrapper size slightly */
+        flex-shrink: 0;
+    }
+
+    .print-card-nama3 {
+        display: block;
+        color: #000 !important;
+        font-size: 0.6rem;
+        /* Smaller font per user request */
+        /* Smaller font for Nama 3 */
+        font-weight: 500;
+        text-align: center;
+        width: 100%;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 0.5;
+        margin-top: 0mm;
+        margin-bottom: 4mm;
+        /* Pushes text further down */
+    }
+
+    .print-card-code {
+        width: 20mm;
+        height: 20mm;
+        min-height: auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
         background: #fff !important;
         border: none !important;
         border-radius: 0 !important;
@@ -711,33 +777,42 @@ tbody td:first-child {
 
     .print-card-code img,
     .print-card-code canvas {
-        width: 44mm !important;
-        height: 44mm !important;
-        max-width: 44mm;
-        max-height: 44mm;
+        width: 20mm !important;
+        height: 20mm !important;
+        max-width: 20mm;
+        max-height: 20mm;
         object-fit: contain;
         display: block;
     }
 
     .print-card-code svg {
-        width: 44mm !important;
+        width: 20mm !important;
         height: auto;
-        max-height: 44mm;
+        max-height: 20mm;
         display: block;
     }
 
-    /* ---- Info text — centered vertically ---- */
+    /* ---- Info text ---- */
     .print-card-info {
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        /* Start from top instead of center */
+        align-items: flex-start;
+        /* Ensure left align */
+        margin-top: -1mm;
+        /* Lift text slightly to align ascender with top of QR boundary */
         gap: 0;
-        overflow: hidden;
+        overflow: visible;
+        width: calc(100% - 22mm);
+        /* Force width allocation */
     }
 
     .print-card-info .info-row {
         margin: 0;
+        margin-bottom: 1.5mm;
+        /* Adds spacing between Outlet and No Asset */
         padding: 0;
         gap: 0;
     }
@@ -749,12 +824,14 @@ tbody td:first-child {
     .info-value {
         display: block;
         color: #000 !important;
-        font-size: 14pt;
+        font-size: 11.5pt;
+        /* Adjusted for 12 digit asset numbers and alignment */
         font-weight: 700;
-        line-height: 1.6;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        line-height: 1.1;
+        white-space: normal;
+        word-break: break-all;
+        /* Allows long alphanumeric strings to break nicely if they exceed boundary */
+        text-align: left;
     }
 
     .print-card-kode {

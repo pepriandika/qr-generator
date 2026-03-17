@@ -141,9 +141,9 @@ fileImport.addEventListener('change', (e) => {
 
             rows.forEach((row) => {
                 const kode = row.kode || row.Kode || row.KODE || row.code || row.Code || row.CODE || '';
-                const nama1 = row.nama1 || row.Nama1 || row.NAMA1 || row['Nama 1'] || row['nama 1'] || '';
-                const nama2 = row.nama2 || row.Nama2 || row.NAMA2 || row['Nama 2'] || row['nama 2'] || '';
-                const nama3 = row.nama3 || row.Nama3 || row.NAMA3 || row['Nama 3'] || row['nama 3'] || '';
+                const nama1 = row.nama1 || row.Nama1 || row.NAMA1 || row['Nama 1'] || row['nama 1'] || row.Outlet || row.OUTLET || '';
+                const nama2 = row.nama2 || row.Nama2 || row.NAMA2 || row['Nama 2'] || row['nama 2'] || row['No. Asset'] || row.NoAsset || row['NO. ASSET'] || '';
+                const nama3 = row.nama3 || row.Nama3 || row.NAMA3 || row['Nama 3'] || row['nama 3'] || row['Tipe Asset'] || row.TipeAsset || row['TIPE ASSET'] || '';
 
                 if (String(kode).trim()) {
                     dataList.push({
@@ -215,6 +215,13 @@ btnGenerate.addEventListener('click', async () => {
                 }
             }
 
+            const topContainer = document.createElement('div');
+            topContainer.className = 'print-card-top';
+
+            const leftCol = document.createElement('div');
+            leftCol.className = 'print-card-left';
+            leftCol.appendChild(codeDiv);
+
             const infoDiv = document.createElement('div');
             infoDiv.className = 'print-card-info';
             infoDiv.innerHTML = `
@@ -224,14 +231,23 @@ btnGenerate.addEventListener('click', async () => {
         <div class="info-row">
           <span class="info-value">${escapeHtml(item.nama2) || '-'}</span>
         </div>
-        <div class="info-row">
-          <span class="info-value">${escapeHtml(item.nama3) || '-'}</span>
-        </div>
         <div class="print-card-kode">${escapeHtml(item.kode)}</div>
       `;
 
-            card.appendChild(codeDiv);
-            card.appendChild(infoDiv);
+            topContainer.appendChild(leftCol);
+            topContainer.appendChild(infoDiv);
+
+            const nama3Div = document.createElement('div');
+            nama3Div.className = 'print-card-nama3';
+            nama3Div.innerHTML = escapeHtml(item.nama3) || '-';
+            // Force text wrapping inline to override any other constraints
+            nama3Div.style.whiteSpace = 'normal';
+            nama3Div.style.wordBreak = 'break-word';
+            nama3Div.style.overflow = 'visible';
+            nama3Div.style.width = '100%';
+
+            card.appendChild(topContainer);
+            card.appendChild(nama3Div);
             printArea.appendChild(card);
         }
 
